@@ -3,39 +3,42 @@ name: Build and Deploy Jekyll Site
 on:
   push:
     branches:
-      - main  # Or the branch you use for your repository
+      - main  # Runs when you push to the main branch
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # Use the latest Ubuntu runner
 
     steps:
-      # Checkout the code from the repository
+      # Step 1: Checkout the code from the repository
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Set up Ruby for Jekyll (GitHub Pages uses Ruby)
+      # Step 2: Set up Ruby for Jekyll (GitHub Pages uses Ruby)
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.0'  # Specify the version of Ruby you want
+          ruby-version: '3.0'  # Set Ruby version, adjust if needed
 
-      # Install Bundler and dependencies from Gemfile
+      # Step 3: Install Bundler (if not installed) and install dependencies from Gemfile
       - name: Install dependencies
         run: |
-          gem install bundler
+          gem install bundler  # Install Bundler (required for handling dependencies)
+          # If Gemfile doesn't exist, create one with necessary contents
+          echo "source 'https://rubygems.org'" > Gemfile
+          echo "gem 'jekyll'" >> Gemfile
+          echo "gem 'bundler'" >> Gemfile
+          # Install all dependencies from the Gemfile
           bundle install
-        working-directory: ${{ github.workspace }}  # Make sure this is in the root of the repo
 
-      # Build the site using Jekyll
+      # Step 4: Build the site with Jekyll (convert .md files into .html)
       - name: Build the site with Jekyll
         run: |
-          bundle exec jekyll build  # This converts .md files into .html files
-        working-directory: ${{ github.workspace }}  # Ensure we're building from the correct directory
+          bundle exec jekyll build  # Converts .md to .html and generates the site in _site/
 
-      # Deploy the generated site to GitHub Pages
+      # Step 5: Deploy to GitHub Pages using the peaceiris actions-gh-pages action
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
-          publish_dir: ./_site  # The directory where Jekyll outputs the site
-          github_token: ${{ secrets.GITHUB_TOKEN }}  # Automatically uses GitHub token to push changes
+          publish_dir: ./_site  # Directory where Jekyll output is stored
+          github_token: ${{ secrets.GITHUB_TOKEN }}  # Automatically use the GitHub token
