@@ -1,4 +1,5 @@
-source "https://rubygems.org"
+source 'https://rubygems.org'
 
-gem "jekyll"
-gem "bundler"
+gem 'jekyll', '~> 4.2'
+gem 'bundler', '~> 2.2'
+
