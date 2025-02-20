@@ -3,7 +3,7 @@ name: Build and Deploy Jekyll Site
 on:
   push:
     branches:
-      - main  # or the branch you use for your repository
+      - main  # Or the branch you use for your repository
 
 jobs:
   build:
@@ -20,19 +20,22 @@ jobs:
         with:
           ruby-version: '3.0'  # Specify the version of Ruby you want
 
-      # Install Bundler and Jekyll dependencies
+      # Install Bundler and dependencies from Gemfile
       - name: Install dependencies
         run: |
           gem install bundler
           bundle install
+        working-directory: ${{ github.workspace }}  # Make sure this is in the root of the repo
 
       # Build the site using Jekyll
       - name: Build the site with Jekyll
         run: |
           bundle exec jekyll build  # This converts .md files into .html files
+        working-directory: ${{ github.workspace }}  # Ensure we're building from the correct directory
 
       # Deploy the generated site to GitHub Pages
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           publish_dir: ./_site  # The directory where Jekyll outputs the site
+          github_token: ${{ secrets.GITHUB_TOKEN }}  # Automatically uses GitHub token to push changes
