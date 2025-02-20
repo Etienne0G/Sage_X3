@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest  # Use the latest Ubuntu runner
+    runs-on: ubuntu-latest  # The runner is Ubuntu, can be changed to other OS if necessary
 
     steps:
       # Step 1: Checkout the code from the repository
@@ -18,22 +18,22 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.0'  # Set Ruby version
+          ruby-version: '3.0'  # You can adjust the Ruby version as needed
 
-      # Step 3: Install dependencies
+      # Step 3: Install Bundler and all dependencies specified in the Gemfile
       - name: Install dependencies
         run: |
           gem install bundler  # Install Bundler
-          bundle install       # Install dependencies from Gemfile
+          bundle install       # Install gems from Gemfile
 
-      # Step 4: Build the site with Jekyll
+      # Step 4: Build the Jekyll site (this converts .md files to .html)
       - name: Build the site with Jekyll
         run: |
-          bundle exec jekyll build  # Build the Jekyll site
+          bundle exec jekyll build  # Build the site
 
       # Step 5: Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
-          publish_dir: ./_site  # Directory where Jekyll outputs the site
+          publish_dir: ./_site  # Output directory for Jekyll site
           github_token: ${{ secrets.GITHUB_TOKEN }}  # GitHub token for deployment
