@@ -14,31 +14,26 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Step 2: Set up Ruby for Jekyll (GitHub Pages uses Ruby)
+      # Step 2: Set up Ruby for Jekyll
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.0'  # Set Ruby version, adjust if needed
+          ruby-version: '3.0'  # Set Ruby version
 
-      # Step 3: Install Bundler (if not installed) and install dependencies from Gemfile
+      # Step 3: Install dependencies
       - name: Install dependencies
         run: |
-          gem install bundler  # Install Bundler (required for handling dependencies)
-          # If Gemfile doesn't exist, create one with necessary contents
-          echo "source 'https://rubygems.org'" > Gemfile
-          echo "gem 'jekyll'" >> Gemfile
-          echo "gem 'bundler'" >> Gemfile
-          # Install all dependencies from the Gemfile
-          bundle install
+          gem install bundler  # Install Bundler
+          bundle install       # Install dependencies from Gemfile
 
-      # Step 4: Build the site with Jekyll (convert .md files into .html)
+      # Step 4: Build the site with Jekyll
       - name: Build the site with Jekyll
         run: |
-          bundle exec jekyll build  # Converts .md to .html and generates the site in _site/
+          bundle exec jekyll build  # Build the Jekyll site
 
-      # Step 5: Deploy to GitHub Pages using the peaceiris actions-gh-pages action
+      # Step 5: Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
-          publish_dir: ./_site  # Directory where Jekyll output is stored
-          github_token: ${{ secrets.GITHUB_TOKEN }}  # Automatically use the GitHub token
+          publish_dir: ./_site  # Directory where Jekyll outputs the site
+          github_token: ${{ secrets.GITHUB_TOKEN }}  # GitHub token for deployment
